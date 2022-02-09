@@ -2,12 +2,12 @@ package main
 
 import "fmt"
 
-func Ola() string {
-	return "Olá, mundo"
+func Ola(nome string) string {
+	return "Olá, " + nome
 }
 
 //regra de negócio
 func main() {
 	//fmt.Println("Olá, mundo")
-	fmt.Println(Ola())
+	fmt.Println(Ola("mundo"))
 }
