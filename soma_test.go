@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestSoma(t *testing.T) {
 
@@ -14,4 +17,14 @@ func TestSoma(t *testing.T) {
 			t.Errorf("resultado %d, want %d, dado %v", resultado, esperado, numeros)
 		}
 	})
+}
+
+func TestSomaTudo(t *testing.T) {
+
+	recebido := SomaTudo([]int{1, 2}, []int{0, 9})
+	esperado := []int{3, 9}
+
+	if !reflect.DeepEqual(recebido, esperado) {
+		t.Errorf("recebido %v esperado %v", recebido, esperado)
+	}
 }
