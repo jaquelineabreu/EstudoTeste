@@ -8,7 +8,7 @@ package main
 // 	return soma
 // }
 
-func Soma(numeros [5]int) int {
+func Soma(numeros []int) int {
 	soma := 0
 	for _, numero := range numeros {
 		soma += numero
