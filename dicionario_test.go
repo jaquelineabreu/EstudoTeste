@@ -3,7 +3,19 @@ package main
 import "testing"
 
 func TestBusca(t *testing.T) {
-	dicionario := Dicionario{"teste": "isso é apenas um teste"}
+
+	dicionario := Dicionario{}
+	dicionario.Adiciona("teste", "isso é apenas um teste")
+
+	esperado := "isso é apenas um teste"
+	resultado, err := dicionario.Busca("teste")
+	if err != nil {
+		t.Fatal("não foi possível encontrar a palavra adicionada:", err)
+	}
+
+	if esperado != resultado {
+		t.Errorf("resultado '%s', esperado '%s'", resultado, esperado)
+	}
 
 	t.Run("palavra conhecida", func(t *testing.T) {
 		resultado, _ := dicionario.Busca("teste")
