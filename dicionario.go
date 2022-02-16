@@ -4,8 +4,9 @@ type Dicionario map[string]string
 type ErrDicionario string
 
 const (
-	ErrNaoEncontrado    = ErrDicionario("não foi possível encontrar a palavra que você procura")
-	ErrPalavraExistente = ErrDicionario("não é possível adicionar a palavra pois ela já existe")
+	ErrNaoEncontrado      = ErrDicionario("não foi possível encontrar a palavra que você procura")
+	ErrPalavraExistente   = ErrDicionario("não é possível adicionar a palavra pois ela já existe")
+	ErrPalavraInexistente = ErrDicionario("não foi possível atualizar a palavra pois ela não existe")
 )
 
 func (e ErrDicionario) Error() string {
@@ -34,4 +35,23 @@ func (d Dicionario) Adiciona(palavra, definicao string) error {
 	}
 
 	return nil
+}
+
+func (d Dicionario) Atualiza(palavra, definicao string) error {
+	_, err := d.Busca(palavra)
+	switch err {
+	case ErrNaoEncontrado:
+		return ErrPalavraInexistente
+	case nil:
+		d[palavra] = definicao
+	default:
+		return err
+
+	}
+
+	return nil
+}
+
+func (d Dicionario) Deleta(palavra string) {
+	delete(d, palavra)
 }
