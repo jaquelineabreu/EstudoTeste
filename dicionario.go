@@ -4,7 +4,10 @@ import "errors"
 
 type Dicionario map[string]string
 
-var ErrNaoEncontrado = errors.New("não foi possível encontrar a palavra que você procura")
+var (
+	ErrNaoEncontrado    = errors.New("não foi possível encontrar a palavra que você procura")
+	ErrPalavraExistente = errors.New("não é possível adicionar a palavra pois ela já existe")
+)
 
 func (d Dicionario) Busca(palavra string) (string, error) {
 	definicao, existe := d[palavra] //duvida
@@ -15,6 +18,17 @@ func (d Dicionario) Busca(palavra string) (string, error) {
 	return definicao, nil
 }
 
-func (d Dicionario) Adiciona(palavra, definicao string) {
-	d[palavra] = definicao
+func (d Dicionario) Adiciona(palavra, definicao string) error {
+	_, err := d.Busca(palavra)
+	switch err {
+	case ErrNaoEncontrado:
+		d[palavra] = definicao
+	case nil:
+		return ErrPalavraExistente
+	default:
+		return err
+
+	}
+
+	return nil
 }
