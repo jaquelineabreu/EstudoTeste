@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestContagem(t *testing.T) {
 
-	t.Run("imprime 3 até Go!", func(t *testing.T) {
+	t.Run("imprime 3 até Vai!", func(t *testing.T) {
 		buffer := &bytes.Buffer{}
 		Contagem(buffer, &SpyContagemOperacoes{})
 
@@ -16,7 +17,7 @@ func TestContagem(t *testing.T) {
 		esperado := `3
 2
 1
-Go!`
+Vai!`
 
 		if resultado != esperado {
 			t.Errorf("resultado '%s', esperado '%s'", resultado, esperado)
@@ -44,10 +45,38 @@ Go!`
 	})
 }
 
-type SleeperSpy struct {
-	Chamadas int
+func TestSleeperConfiguravel(t *testing.T) {
+	tempoPausa := 5 * time.Second
+
+	tempoSpy := &TempoSpy{}
+	sleeper := SleeperConfiguravel{tempoPausa, tempoSpy.Pausa}
+	sleeper.Pausa()
+
+	if tempoSpy.duracaoPausa != tempoPausa {
+		t.Errorf("deveria ter pausado por %v, mas pausou por %v", tempoPausa, tempoSpy.duracaoPausa)
+	}
 }
 
-func (s *SleeperSpy) Pausa() {
-	s.Chamadas++
+type SpyContagemOperacoes struct {
+	Chamadas []string
+}
+
+func (s *SpyContagemOperacoes) Pausa() {
+	s.Chamadas = append(s.Chamadas, pausa)
+}
+
+func (s *SpyContagemOperacoes) Write(p []byte) (n int, err error) {
+	s.Chamadas = append(s.Chamadas, escrita)
+	return
+}
+
+const escrita = "escrita"
+const pausa = "pausa"
+
+type TempoSpy struct {
+	duracaoPausa time.Duration
+}
+
+func (t *TempoSpy) Pausa(duracao time.Duration) {
+	t.duracaoPausa = duracao
 }

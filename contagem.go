@@ -12,15 +12,18 @@ type Sleeper interface {
 	Pausa()
 }
 
-// SleeperPadrao é uma implementação de Sleeper com um atraso pré-definido
-type SleeperPadrao struct{}
-
-// Pausa vai pausar a execução pela Duração definida
-func (d *SleeperPadrao) Pausa() {
-	time.Sleep(1 * time.Second)
+// SleeperConfiguravel é uma implementação de Sleepr com uma pausa definida
+type SleeperConfiguravel struct {
+	duracao time.Duration
+	pausa   func(time.Duration)
 }
 
-const ultimaPalavra = "Go!"
+// Pausa vai pausar a execução pela Duração definida
+func (s *SleeperConfiguravel) Pausa() {
+	s.pausa(s.duracao)
+}
+
+const ultimaPalavra = "Vai!"
 const inicioContagem = 3
 
 // Contagem imprime uma contagem de 3 para a saída com um atraso determinado por um Sleeper
@@ -35,22 +38,6 @@ func Contagem(saida io.Writer, sleeper Sleeper) {
 }
 
 func main() {
-	sleeper := &SleeperPadrao{}
+	sleeper := &SleeperConfiguravel{1 * time.Second, time.Sleep}
 	Contagem(os.Stdout, sleeper)
 }
-
-type SpyContagemOperacoes struct {
-	Chamadas []string
-}
-
-func (s *SpyContagemOperacoes) Pausa() {
-	s.Chamadas = append(s.Chamadas, pausa)
-}
-
-func (s *SpyContagemOperacoes) Write(p []byte) (n int, err error) {
-	s.Chamadas = append(s.Chamadas, escrita)
-	return
-}
-
-const escrita = "escrita"
-const pausa = "pausa"
