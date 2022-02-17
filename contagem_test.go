@@ -14,7 +14,7 @@ func TestContagem(t *testing.T) {
 	esperado := `3
 				 2
 				 1
-				 Vai!`
+				 Go!`
 	if resultado != esperado {
 		t.Errorf("resultado '%s', esperado '%s'", resultado, esperado)
 	}
